@@ -7,6 +7,7 @@ export function Navigation() {
   const navItems = [
     { label: "SONGS", path: "/songs" },
     { label: "DJ SETS", path: "/dj-sets" },
+    { label: "PAINTINGS", path: "/paintings" },
     { label: "SHOWS", path: "/shows" },
     { label: "CONTACT", path: "/contact" },
   ];

@@ -10,7 +10,7 @@ export default function Root() {
       {/* UN HOMBRE ALADO title centered in the column */}
       <Link 
         to="/"
-        className="fixed left-1/2 top-[200px] -translate-x-1/2 z-50 font-['Inter:Regular',sans-serif] font-normal text-[50px] text-black tracking-[18.5px] hover:opacity-60 transition-opacity"
+        className="fixed left-1/2 top-[200px] -translate-x-1/2 z-50 font-['Inter:Regular',sans-serif] font-normal text-[24px] text-black tracking-[12px] hover:opacity-60 transition-opacity text-center w-[420px]"
       >
         UN HOMBRE ALADO
       </Link>

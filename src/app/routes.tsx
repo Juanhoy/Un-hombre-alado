@@ -3,6 +3,7 @@ import Root from "./pages/Root";
 import Home from "./pages/Home";
 import Songs from "./pages/Songs";
 import DJSets from "./pages/DJSets";
+import Paintings from "./pages/Paintings";
 import Shows from "./pages/Shows";
 import Contact from "./pages/Contact";
 
@@ -14,6 +15,7 @@ export const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: "songs", Component: Songs },
       { path: "dj-sets", Component: DJSets },
+      { path: "paintings", Component: Paintings },
       { path: "shows", Component: Shows },
       { path: "contact", Component: Contact },
     ],
