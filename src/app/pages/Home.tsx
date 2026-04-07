@@ -1,5 +1,6 @@
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { getCloudinaryUrl } from "@/app/config/cloudinary";
+import { useRef } from "react";
 
 // Fallback to local assets if Cloudinary is not configured
 import imgCasset31 from "@/assets/83060ca2ee4d5a079edf8a9d57a3ad60efff63d8.png";
@@ -9,76 +10,90 @@ import imgCasset41 from "@/assets/2c578c4c7df81b17a1b3b0ba45510faaea7f9f6f.png";
 
 const USE_CLOUDINARY = false;
 
-// The list of images for the artist. You can easily add more here!
-const IMAGE_LIST = [
+// Divide the images for the left and right columns
+const LEFT_IMAGES = [
   { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_1') : imgCasset11, width: 447, height: 563 },
-  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_2') : imgCasset31, width: 324, height: 427 },
   { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_3') : imgCasset21, width: 342, height: 428 },
-  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_4') : imgCasset41, width: 450, height: 500 },
+  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_5') : imgCasset11, width: 400, height: 500 },
 ];
 
-/**
- * A reusable Ticker Column component for the vertical loop effect
- */
-function TickerColumn({ images, speed = 40, reverse = false }: { images: any[], speed?: number, reverse?: boolean }) {
-  // Triple the images to ensure no gaps during the loop
-  const duplicatedImages = [...images, ...images, ...images];
-
-  return (
-    <div className="h-screen overflow-hidden relative w-[450px]">
-      <motion.div
-        animate={{ 
-          y: reverse ? [0, -100 * images.length / 3 + '%'] : [-100 * images.length / 3 + '%', 0] 
-        }}
-        initial={{ y: reverse ? 0 : -100 * images.length / 3 + '%' }}
-        transition={{ 
-          duration: speed, 
-          repeat: Infinity, 
-          ease: "linear" 
-        }}
-        className="flex flex-col gap-24 items-center"
-      >
-        {duplicatedImages.map((image, index) => (
-          <div
-            key={index}
-            className="relative shadow-2xl rounded-sm overflow-hidden flex-shrink-0"
-          >
-            <img 
-              src={image.src} 
-              alt={`Artist visual ${index}`} 
-              style={{ width: image.width, height: 'auto' }}
-              className="block opacity-90 hover:opacity-100 transition-opacity duration-500" 
-            />
-          </div>
-        ))}
-      </motion.div>
-    </div>
-  );
-}
+const RIGHT_IMAGES = [
+  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_2') : imgCasset31, width: 324, height: 427 },
+  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_4') : imgCasset41, width: 450, height: 500 },
+  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_6') : imgCasset31, width: 380, height: 480 },
+];
 
 export default function Home() {
-  return (
-    <div className="relative h-screen bg-white overflow-hidden">
-      {/* 
-        The side containers for the loop effect.
-        We increased the inner gap to 600px to ensure plenty of space around the title.
-      */}
-      <div className="flex gap-[600px] justify-center px-4 w-full">
-        
-        {/* Left Vertical Ticker */}
-        <TickerColumn images={IMAGE_LIST} speed={60} />
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Track the scroll of the entire page
+  const { scrollYProgress } = useScroll();
 
-        {/* Right Vertical Ticker (Scrolled in reverse for dynamic feel) */}
-        <TickerColumn images={IMAGE_LIST} speed={45} reverse />
+  // Create inverse scroll relationships
+  // As scroll goes from 0% to 100% of the page:
+  // Left column moves from Y: 0 to Y: -500px (moving UP)
+  // Right column moves from Y: -500px to Y: 0 (moving DOWN)
+  const leftY = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
+  const rightY = useTransform(scrollYProgress, [0, 1], ["-50%", "0%"]);
+
+  return (
+    <div ref={containerRef} className="relative min-h-[300vh] bg-white">
+      {/* 
+        Fixed viewport wrapper that contains the side columns.
+        This wrapper stays in place while the user scrolls 300vh of page height.
+      */}
+      <div className="fixed inset-0 pointer-events-none flex gap-[600px] justify-center px-4 overflow-hidden">
+        
+        {/* Left Column - Inverse Parallax */}
+        <motion.div 
+          style={{ y: leftY }}
+          className="w-[450px] flex flex-col gap-24 pt-24 items-center"
+        >
+          {/* We repeat the images to make the scroll feel long and infinite */}
+          {[...LEFT_IMAGES, ...LEFT_IMAGES].map((image, index) => (
+            <div
+              key={`left-${index}`}
+              className="relative shadow-2xl rounded-sm overflow-hidden flex-shrink-0"
+            >
+              <img 
+                src={image.src} 
+                alt="Artist Portrait Left" 
+                style={{ width: image.width, height: 'auto' }}
+                className="block" 
+              />
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Right Column - Normal Parallax (shuffled) */}
+        <motion.div 
+          style={{ y: rightY }}
+          className="w-[450px] flex flex-col gap-24 pt-24 items-center"
+        >
+          {[...RIGHT_IMAGES, ...RIGHT_IMAGES].map((image, index) => (
+            <div
+              key={`right-${index}`}
+              className="relative shadow-2xl rounded-sm overflow-hidden flex-shrink-0"
+            >
+              <img 
+                src={image.src} 
+                alt="Artist Portrait Right" 
+                style={{ width: image.width, height: 'auto' }}
+                className="block" 
+              />
+            </div>
+          ))}
+        </motion.div>
         
       </div>
 
-      {/* Subtle depth overlay */}
-      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-white/20 via-transparent to-white/20 z-10" />
+      {/* Decorative Fixed Overlay */}
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-white via-transparent to-white opacity-40 z-10" />
       
-      {/* Instructions Overlay for User (Can be removed later) */}
-      <div className="fixed bottom-4 left-4 text-[10px] text-gray-300 pointer-events-none tracking-widest uppercase">
-        Looping Vertical Motion • Un hombre alado
+      {/* Scroll indicator (aesthetic) */}
+      <div className="fixed bottom-10 right-10 flex flex-col items-center gap-2 z-50 text-[10px] tracking-[0.4em] text-gray-300 transform rotate-90 origin-right translate-x-12 translate-y-20">
+        <div className="w-10 h-px bg-gray-200" />
+        SCROLL TO EXPLORE
       </div>
     </div>
   );
