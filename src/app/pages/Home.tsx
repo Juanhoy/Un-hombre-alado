@@ -9,71 +9,77 @@ import imgCasset41 from "@/assets/2c578c4c7df81b17a1b3b0ba45510faaea7f9f6f.png";
 
 const USE_CLOUDINARY = false;
 
-export default function Home() {
-  const images = [
-    { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_1') : imgCasset11, width: 447, height: 563, mt: 100 },
-    { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_3') : imgCasset21, width: 342, height: 428, mt: 350 },
-    { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_5') : imgCasset11, width: 400, height: 500, mt: 400 }, // Repeat for demo
-  ];
+// The list of images for the artist. You can easily add more here!
+const IMAGE_LIST = [
+  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_1') : imgCasset11, width: 447, height: 563 },
+  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_2') : imgCasset31, width: 324, height: 427 },
+  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_3') : imgCasset21, width: 342, height: 428 },
+  { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_4') : imgCasset41, width: 450, height: 500 },
+];
 
-  const secondaryImages = [
-    { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_2') : imgCasset31, width: 324, height: 427, mt: 100 },
-    { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_4') : imgCasset41, width: 450, height: 500, mt: 300 },
-    { src: USE_CLOUDINARY ? getCloudinaryUrl('artist_hero_6') : imgCasset31, width: 380, height: 480, mt: 400 }, // Repeat for demo
-  ];
+/**
+ * A reusable Ticker Column component for the vertical loop effect
+ */
+function TickerColumn({ images, speed = 40, reverse = false }: { images: any[], speed?: number, reverse?: boolean }) {
+  // Triple the images to ensure no gaps during the loop
+  const duplicatedImages = [...images, ...images, ...images];
 
   return (
-    <div className="relative min-h-[200vh] bg-white overflow-x-hidden">
-      {/* Scrollable Container with Two Side Gutters */}
-      <div className="flex gap-[420px] justify-center px-10 pb-40">
-        
-        {/* Left Gutter - Images */}
-        <div className="w-[400px] flex flex-col items-center">
-          {images.map((image, index) => (
-            <motion.div
-              key={`left-${index}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, delay: index * 0.2 }}
-              style={{ marginTop: index === 0 ? image.mt : 200 }}
-              className="relative shadow-2xl rounded-sm overflow-hidden"
-            >
-              <img 
-                src={image.src} 
-                alt="Artist Portrait" 
-                style={{ width: image.width, height: 'auto' }}
-                className="block hover:scale-110 transition-transform duration-1000 ease-in-out" 
-              />
-            </motion.div>
-          ))}
-        </div>
+    <div className="h-screen overflow-hidden relative w-[450px]">
+      <motion.div
+        animate={{ 
+          y: reverse ? [0, -100 * images.length / 3 + '%'] : [-100 * images.length / 3 + '%', 0] 
+        }}
+        initial={{ y: reverse ? 0 : -100 * images.length / 3 + '%' }}
+        transition={{ 
+          duration: speed, 
+          repeat: Infinity, 
+          ease: "linear" 
+        }}
+        className="flex flex-col gap-24 items-center"
+      >
+        {duplicatedImages.map((image, index) => (
+          <div
+            key={index}
+            className="relative shadow-2xl rounded-sm overflow-hidden flex-shrink-0"
+          >
+            <img 
+              src={image.src} 
+              alt={`Artist visual ${index}`} 
+              style={{ width: image.width, height: 'auto' }}
+              className="block opacity-90 hover:opacity-100 transition-opacity duration-500" 
+            />
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
 
-        {/* Right Gutter - Images */}
-        <div className="w-[400px] flex flex-col items-center">
-          {secondaryImages.map((image, index) => (
-            <motion.div
-              key={`right-${index}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, delay: (index + 3) * 0.2 }}
-              style={{ marginTop: index === 0 ? image.mt : 200 }}
-              className="relative shadow-2xl rounded-sm overflow-hidden"
-            >
-              <img 
-                src={image.src} 
-                alt="Artist Portrait" 
-                style={{ width: image.width, height: 'auto' }}
-                className="block hover:scale-110 transition-transform duration-1000 ease-in-out" 
-              />
-            </motion.div>
-          ))}
-        </div>
+export default function Home() {
+  return (
+    <div className="relative h-screen bg-white overflow-hidden">
+      {/* 
+        The side containers for the loop effect.
+        We increased the inner gap to 600px to ensure plenty of space around the title.
+      */}
+      <div className="flex gap-[600px] justify-center px-4 w-full">
+        
+        {/* Left Vertical Ticker */}
+        <TickerColumn images={IMAGE_LIST} speed={60} />
+
+        {/* Right Vertical Ticker (Scrolled in reverse for dynamic feel) */}
+        <TickerColumn images={IMAGE_LIST} speed={45} reverse />
+        
       </div>
 
-      {/* Background depth overlay */}
-      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(255,255,255,0.2)_100%)] z-10" />
+      {/* Subtle depth overlay */}
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-white/20 via-transparent to-white/20 z-10" />
+      
+      {/* Instructions Overlay for User (Can be removed later) */}
+      <div className="fixed bottom-4 left-4 text-[10px] text-gray-300 pointer-events-none tracking-widest uppercase">
+        Looping Vertical Motion • Un hombre alado
+      </div>
     </div>
   );
 }
