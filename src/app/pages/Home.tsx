@@ -26,11 +26,16 @@ export default function Home() {
   const { scrollYProgress } = useScroll();
 
   // Desktop Scroll Mapping (Inverse Parallax)
-  const leftY = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
-  const rightY = useTransform(scrollYProgress, [0, 1], ["-50%", "0%"]);
+  // We use a larger range to ensure a lot of movement
+  const leftY = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
+  const rightY = useTransform(scrollYProgress, [0, 1], ["-60%", "0%"]);
+
+  // Create a more diverse set for each column
+  const leftColumnSet = [...IMAGES, ...IMAGES, ...IMAGES];
+  const rightColumnSet = [...IMAGES.reverse(), ...IMAGES, ...IMAGES];
 
   return (
-    <div ref={containerRef} className="relative bg-white min-h-[400vh] lg:min-h-[300vh]">
+    <div ref={containerRef} className="relative bg-white min-h-[500vh] lg:min-h-[400vh]">
       
       {/* 
         -------------------------------------------
@@ -38,12 +43,10 @@ export default function Home() {
         -------------------------------------------
       */}
       <div className="lg:hidden flex flex-col items-center">
-        {/* Main Menu statically placed at top of Home */}
         <div className="py-24 w-full bg-white z-20">
           <Navigation />
         </div>
 
-        {/* Single Scrollable Column of Images below Menu */}
         <div className="w-full px-6 flex flex-col gap-32 pb-40 relative z-10">
           {IMAGES.map((image, index) => (
             <motion.div 
@@ -52,14 +55,10 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              style={{ x: image.xOffset / 2 }} // Reduced offset for mobile
+              style={{ x: image.xOffset / 2 }}
               className="relative shadow-xl rounded-sm overflow-hidden w-full max-w-[320px] mx-auto"
             >
-              <img 
-                src={image.src} 
-                alt="" 
-                className="w-full h-auto block" 
-              />
+              <img src={image.src} alt="" className="w-full h-auto block" />
             </motion.div>
           ))}
         </div>
@@ -72,15 +71,16 @@ export default function Home() {
         -------------------------------------------
       */}
       <div className="hidden lg:fixed lg:inset-0 lg:flex lg:gap-[600px] lg:justify-center lg:px-4 lg:overflow-hidden lg:pointer-events-none">
+        
         {/* Left Column (Moves UP) */}
         <motion.div style={{ y: leftY }} className="w-[450px] flex flex-col gap-32 pt-24 items-center">
-          {[...IMAGES, ...IMAGES].map((image, index) => (
+          {leftColumnSet.map((image, index) => (
             <div 
               key={`left-${index}`} 
               className="relative flex-shrink-0"
               style={{ transform: `translateX(${image.xOffset}px)` }}
             >
-              <div className="shadow-2xl rounded-sm overflow-hidden">
+              <div className="shadow-2xl rounded-sm overflow-hidden bg-gray-50">
                 <img src={image.src} alt="" style={{ width: image.width, height: 'auto' }} className="block" />
               </div>
             </div>
@@ -89,13 +89,13 @@ export default function Home() {
 
         {/* Right Column (Moves DOWN) */}
         <motion.div style={{ y: rightY }} className="w-[450px] flex flex-col gap-32 pt-24 items-center">
-          {[...IMAGES, ...IMAGES].map((image, index) => (
+          {rightColumnSet.map((image, index) => (
             <div 
               key={`right-${index}`} 
               className="relative flex-shrink-0"
-              style={{ transform: `translateX(${-image.xOffset}px)` }} // Opposite offset for symmetry
+              style={{ transform: `translateX(${-image.xOffset}px)` }}
             >
-              <div className="shadow-2xl rounded-sm overflow-hidden">
+              <div className="shadow-2xl rounded-sm overflow-hidden bg-gray-50">
                 <img src={image.src} alt="" style={{ width: image.width, height: 'auto' }} className="block" />
               </div>
             </div>
