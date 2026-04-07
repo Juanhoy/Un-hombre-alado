@@ -3,24 +3,36 @@ import { Navigation } from "../components/Navigation";
 
 export default function Root() {
   return (
-    <div className="bg-white min-h-screen relative">
-      {/* Center column with white background */}
-      <div className="fixed left-1/2 top-0 bottom-0 w-[420px] -translate-x-1/2 bg-white z-40" />
+    <div className="bg-white min-h-screen relative overflow-x-hidden">
+      {/* Center column with white background - Only fixed on Desktop */}
+      <div className="hidden lg:block lg:fixed lg:left-1/2 lg:top-0 lg:bottom-0 lg:w-[420px] lg:-translate-x-1/2 lg:bg-white lg:z-40" />
       
-      {/* UN HOMBRE ALADO title centered in the column */}
-      <Link 
-        to="/"
-        className="fixed left-1/2 top-[200px] -translate-x-1/2 z-50 font-['Inter:Regular',sans-serif] font-normal text-[24px] text-black tracking-[12px] hover:opacity-60 transition-opacity text-center w-[420px]"
-      >
-        UN HOMBRE ALADO
-      </Link>
+      {/* 
+        Header/Title Wrapper 
+        On Mobile: Sticky at top
+        On Desktop: Fixed in center column
+      */}
+      <header className="sticky top-0 lg:fixed lg:left-1/2 lg:top-[200px] lg:-translate-x-1/2 z-50 bg-white/80 backdrop-blur-md lg:bg-transparent w-full lg:w-[420px] py-8 lg:py-0">
+        <Link 
+          to="/"
+          className="block font-['Inter:Regular',sans-serif] font-normal text-[20px] lg:text-[24px] text-black tracking-[8px] lg:tracking-[12px] hover:opacity-60 transition-opacity text-center uppercase"
+        >
+          UN HOMBRE ALADO
+        </Link>
+        
+        {/* Navigation - Hidden on mobile in the fixed center, instead we'll put it below title or use a mobile menu */}
+        <div className="mt-8 lg:mt-[120px] px-4 overflow-x-auto lg:overflow-visible no-scrollbar">
+          <Navigation />
+        </div>
+      </header>
       
-      {/* Navigation centered in the column, below CASSET */}
-      <div className="fixed left-1/2 top-[320px] -translate-x-1/2 z-50">
-        <Navigation />
-      </div>
+      {/* Main Content Area */}
+      <main className="relative z-0">
+        <Outlet />
+      </main>
       
-      <Outlet />
+      {/* Mobile background spacer to avoid content being under header */}
+      <div className="h-20 lg:hidden" />
     </div>
   );
 }

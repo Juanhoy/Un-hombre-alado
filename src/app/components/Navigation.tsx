@@ -13,14 +13,19 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="flex flex-col items-center gap-16">
+    <nav className="flex flex-row lg:flex-col items-center justify-center gap-8 lg:gap-16 w-full px-4 lg:px-0">
       {navItems.map((item) => {
         const isActive = location.pathname === item.path;
         return (
           <Link
             key={item.path}
             to={item.path}
-            className="relative font-['Inter:Regular',sans-serif] font-normal text-[25px] text-black hover:opacity-60 transition-opacity"
+            className={`
+              relative font-['Inter:Regular',sans-serif] font-normal 
+              text-[14px] lg:text-[25px] text-black hover:opacity-60 
+              transition-opacity whitespace-nowrap tracking-[0.2em] lg:tracking-[0.4em]
+              ${isActive ? 'opacity-100' : 'opacity-40 lg:opacity-100'}
+            `}
           >
             {item.label}
             {isActive && (
