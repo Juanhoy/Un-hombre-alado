@@ -1,12 +1,12 @@
-import imgCasset31 from "figma:asset/83060ca2ee4d5a079edf8a9d57a3ad60efff63d8.png";
-import imgCasset11 from "figma:asset/7a015c877b6f8546033e8b9314c8427a6a15fc8c.png";
-import imgCasset21 from "figma:asset/7f8d7ed936523d863d863f945090b1e46b9c6989.png";
-import imgCasset41 from "figma:asset/2c578c4c7df81b17a1b3b0ba45510faaea7f9f6f.png";
+import imgCasset31 from "@/assets/83060ca2ee4d5a079edf8a9d57a3ad60efff63d8.png";
+import imgCasset11 from "@/assets/7a015c877b6f8546033e8b9314c8427a6a15fc8c.png";
+import imgCasset21 from "@/assets/7f8d7ed936523d863d863f945090b1e46b9c6989.png";
+import imgCasset41 from "@/assets/2c578c4c7df81b17a1b3b0ba45510faaea7f9f6f.png";
 
 export default function Frame() {
   return (
     <div className="bg-white relative size-full">
-      <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[normal] left-[834px] not-italic text-[50px] text-black top-[450px] tracking-[18.5px] whitespace-nowrap">CASSET</p>
+      <p className="absolute font-['Inter:Regular',sans-serif] font-normal leading-[normal] left-[834px] not-italic text-[50px] text-black top-[450px] tracking-[18.5px] whitespace-nowrap">UN HOMBRE ALADO</p>
       <p className="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[normal] left-[960.5px] not-italic text-[25px] text-black text-center top-[584px] whitespace-nowrap">SONGS</p>
       <p className="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[normal] left-[960px] not-italic text-[25px] text-black text-center top-[648px] whitespace-nowrap">DJ SETS</p>
       <p className="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[normal] left-[960px] not-italic text-[25px] text-black text-center top-[712px] whitespace-nowrap">SHOWS</p>
